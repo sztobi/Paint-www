@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+	<meta charset="UTF-8">
+	<title>Zadanie 5</title>
+	<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body>
+
+<h1>
+	<b>Rysowanie:</b>
+</h1>
+<br><br>
+
+<select name="figura" id="select-type">
+	<option>Kwadrat</option>
+	<option>Koło</option>
+	<option>Linia</option>
+</select>
+<br><br>
+Współrzędne:<br>
+X:<input type="text" name="x" value="0" maxlenght="3" id="xCoordinate"><br>
+Y:<input type="text" name="y" value="0" maxlenght="3" id="yCoordinate"><br>
+<br>
+
+Wypełnienie:<input type="checkbox" name="wypelnienie" id="fill">
+<br><br>
+
+<div class="slidecontainer">
+  Rozmiar: 
+  <input type="range" min="1" max="100" value="50" class="suwak" id="mySuwak">
+  <span id="demo"></span>
+</div>
+
+
+
+<div>
+	<form action="/action_page.php">
+	Wybierz kolor:
+	<input type="color" name="kolor" value="#f6b5fc" id="colorPicker">
+	</form>
+<div>
+
+<div>
+	<button id="draw-button">
+		Rysuj
+	</button>
+</div>
+
+
+<canvas width="500px" height="500px" class="canvas-container" id="drawBox">
+	
+</canvas>
+
+<script>
+	function draw () {
+		var type = document.getElementById('select-type').value;
+		var xCoordinate = parseInt(document.getElementById('xCoordinate').value);
+		var yCoordinate = parseInt(document.getElementById('yCoordinate').value);
+		var isFill = document.getElementById('fill').checked;
+		var sliderValue = parseInt(document.getElementById("mySuwak").value);
+		var color = document.getElementById('colorPicker').value;
+
+		var drawBox = document.getElementById('drawBox').getContext("2d");
+
+		function fill(drawBox) {
+			drawBox.fillStyle = color;
+			drawBox.fill();
+		}
+
+		if(type === 'Kwadrat') {
+			drawBox.beginPath();
+			drawBox.rect(xCoordinate, yCoordinate, sliderValue, sliderValue);
+      drawBox.lineWidth = 2;
+      drawBox.strokeStyle = color;
+      drawBox.stroke();
+			if(isFill) {
+				fill(drawBox);
+			}
+		} else if(type === 'Linia') {
+			drawBox.beginPath();
+			drawBox.moveTo(xCoordinate, yCoordinate);
+			drawBox.lineTo(xCoordinate + sliderValue, yCoordinate);
+			drawBox.strokeStyle = color;
+			drawBox.stroke();
+		} else {
+			drawBox.beginPath();
+			drawBox.arc(xCoordinate,yCoordinate,sliderValue,0,2*Math.PI);
+			drawBox.strokeStyle = color;
+			drawBox.stroke();
+			drawBox.lineWidth = 5;
+			if (isFill) {
+				fill(drawBox);
+			}
+		}
+	}
+
+	var slider = document.getElementById("mySuwak");
+	var output = document.getElementById("demo");
+	output.innerHTML = slider.value;
+	
+	slider.oninput = function() {
+	  output.innerHTML = this.value;
+	}
+
+
+	document.getElementById('draw-button').addEventListener('click', draw);
+</script>
+
+</body>
+</html>
